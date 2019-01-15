@@ -8,6 +8,21 @@
     overflow: hidden;
 }
 
+
+.buttons {
+    text-align: center;
+    width: 300px;
+}
+.buttons span {
+    border-radius: 50%;
+    background:rgba(136, 255, 0, 0.664);
+    margin: 0 15px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+
+}
+
 .red {
     color: red;
 }
