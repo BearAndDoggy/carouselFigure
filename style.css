@@ -11,7 +11,7 @@
     position: relative;
 }
 
-.window > button {
+.window>button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -25,6 +25,7 @@
 .next {
     right: 0;
 }
+
 .buttons {
     text-align: center;
     width: 200px;
