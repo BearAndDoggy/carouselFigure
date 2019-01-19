@@ -1,37 +1,78 @@
-var $allButtons = $('.buttons span')
+var buttons = $('.buttons > span')
+var current = 0
 
-$('.buttons').on('click', function(event) {
-    var x = $(event.target).index()
-    var p = x * -300
-    $('.images').css({
-        'transform': `translateX(${p}px)`
-    })
+bindEvents()
+autoSlide()
+init()
 
-    buttonSlide($(event.target))
-    n = x
-})
-
-var n = 0
-var length = $allButtons.length
-buttonSlide($allButtons.eq(n % length).trigger('click'))
-var timeId = setTimer()
-
-$('.window').on('mouseenter', function() {
-    clearInterval(timeId)
-})
-
-$('.window').on('mouseout', function() {
-    timeId = setTimer()
-})
-
-function buttonSlide($button) {
-    $button.addClass('red')
-    .siblings().removeClass('red')
+function init() {
+    $('.images').children(':first').clone(true).appendTo('.images')
+    $('.images').children(':nth-child(5)').clone(true).prependTo('.images')
 }
 
-function setTimer() {
-    return setInterval(() => {
-        $allButtons.eq(n % length).trigger('click')
-        n += 1
+function autoSlide() {
+    var timer = setInterval(() => {
+        slideTo(current + 1)
     }, 2000)
+
+    $('.window').on('mouseover', function () {
+        clearInterval(timer)
+    }).on('mouseout', function () {
+        timer = setInterval(() => {
+            slideTo(current + 1)
+        }, 2000)
+    })
+}
+
+
+function bindEvents() {
+    buttons.on('mouseenter', function (e) {
+        var target = e.currentTarget
+        var i = $(target).index()
+        slideTo(i)
+    })
+
+    $('.next').on('click', function () {
+        slideTo(current + 1)
+    })
+
+    $('.previous').on('click', function () {
+        slideTo(current - 1)
+    })
+}
+
+function slideTo(i) {
+    if (i > buttons.length - 1) {
+        i = 0
+    } else if (i < 0) {
+        i = buttons.length - 1
+    }
+
+    if (i === 0 && current === buttons.length - 1) {
+        $('.images').css({
+            'transform': `translateX(${(-(buttons.length + 1) * 300)}px)`
+        }).one('transitionend', function () {
+            $('.images').hide()
+            $('.images').offset()
+            $('.images').css({
+                'transform': `translateX(-300px)`
+            }).show()
+        })
+    } else if (i === buttons.length - 1 && current === 0) {
+        $('.images').css({
+            'transform': `translateX(0px)`
+        }).one('transitionend', function () {
+            $('.images').hide()
+            $('.images').offset()
+            $('.images').css({
+                'transform': `translateX(${(- buttons.length * 300)}px)`
+            }).show()
+        })
+    } else {
+        $('.images').css({
+            'transform': `translateX(${(- (i+1) * 300)}px)`
+        })
+    }
+    buttons.eq(i).addClass('black').siblings().removeClass('black')
+    current = i
 }
